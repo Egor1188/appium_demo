@@ -1,9 +1,10 @@
 import allure
 import pytest
+from appium import webdriver
+from appium.options.android import UiAutomator2Options
 
 from config.settings import load_settings
 from core.devices import device_for_worker, system_port_for_worker
-from core.driver_factory import create_driver
 
 
 @pytest.fixture(scope="session")
@@ -24,7 +25,15 @@ def driver(request, settings, worker_id):
     """One driver per test. Each xdist worker gets its own device and systemPort."""
     udid = device_for_worker(settings.devices, worker_id)
     port = system_port_for_worker(settings.base_system_port, worker_id)
-    drv = create_driver(settings, udid, port)
+    options = UiAutomator2Options()
+    options.platform_name = "Android"
+    options.automation_name = "UiAutomator2"
+    options.udid = udid
+    options.app = settings.app_path
+    options.system_port = port
+    options.new_command_timeout = 120
+    options.no_reset = False
+    drv = webdriver.Remote(settings.appium_url, options=options)
     yield drv
     failed = getattr(request.node, "rep_call", None) is not None and request.node.rep_call.failed
     if failed:

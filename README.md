@@ -8,12 +8,10 @@ no code or data from any employer.
 ## Structure
 ```
 config/settings.py      settings from environment variables (no hard-coded values)
-core/driver_factory.py  creates the Appium driver
 core/devices.py         one device and one systemPort per xdist worker
-pages/                  Page Objects (BasePage with explicit waits, MainPage, ViewsPage)
-tests/conftest.py       driver fixture, screenshot attached to Allure on failure
-tests/ui/               UI tests (marker: device)
-tests/unit/             tests of the framework itself, run without a device
+pages/                  Page Objects with explicit waits and all assertions (BasePage, MainPage, ViewsPage)
+tests/conftest.py       Appium driver fixture, screenshot attached to Allure on failure
+tests/ui/               UI tests (no assertions: they call page checks)
 ```
 
 ## Setup
@@ -26,9 +24,8 @@ tests/unit/             tests of the framework itself, run without a device
 ## Run
 ```bash
 appium                                   # terminal 1
-pytest -m "not device" -v                # framework unit tests, no device needed
-pytest -m device -v --alluredir=allure-results      # UI tests on one device
-DEVICES=emulator-5554,emulator-5556 pytest -m device -n 2   # two devices in parallel
+pytest -v --alluredir=allure-results      # UI tests on one device
+DEVICES=emulator-5554,emulator-5556 pytest -n 2   # two devices in parallel
 allure serve allure-results              # report (Allure CLI required)
 ```
 
@@ -41,4 +38,4 @@ allure serve allure-results              # report (Allure CLI required)
 - With `-n N` every worker takes its own device from `DEVICES` and its own `systemPort`
   (`BASE_SYSTEM_PORT + worker index`), so parallel sessions do not collide. If there are more
   workers than devices, the run fails with a clear message.
-- The device tests are separated by the `device` marker, so CI can run the framework tests anywhere.
+- Tests contain no `assert`: checks live in Page Objects (`check_*` methods).

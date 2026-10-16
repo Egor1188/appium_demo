@@ -21,5 +21,8 @@ class BasePage:
         except Exception:
             return False
 
+    def assert_visible(self, accessibility_id: str):
+        assert self.is_visible(accessibility_id), f"'{accessibility_id}' is not visible on the screen"
+
     def back(self):
         self.driver.back()

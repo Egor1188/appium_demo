@@ -7,5 +7,5 @@ class MainPage(BasePage):
     def open_category(self, name: str):
         self.tap(name)
 
-    def has_category(self, name: str) -> bool:
-        return self.is_visible(name)
+    def check_category_shown(self, name: str):
+        self.assert_visible(name)
