@@ -9,6 +9,7 @@ no code or data from any employer.
 ```
 config/settings.py      settings from environment variables (no hard-coded values)
 core/devices.py         one device and one systemPort per xdist worker
+core/logger.py          loguru setup: console + logs/test_<worker>.log
 pages/                  Page Objects with explicit waits and all assertions (BasePage, MainPage, ViewsPage)
 conftest.py            Appium driver fixture, screenshot attached to Allure on failure
 tests/ui/               UI tests (no assertions: they call page checks)

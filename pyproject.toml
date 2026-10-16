@@ -8,6 +8,7 @@ package-mode = false
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
 Appium-Python-Client = ">=4"
+loguru = ">=0.7"
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=8"

@@ -2,9 +2,16 @@ import allure
 import pytest
 from appium import webdriver
 from appium.options.android import UiAutomator2Options
+from loguru import logger
 
 from config.settings import load_settings
 from core.devices import device_for_worker, system_port_for_worker
+from core.logger import setup_logging
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _logging(worker_id):
+    setup_logging(worker_id)
 
 
 @pytest.fixture(scope="session")
@@ -33,9 +40,12 @@ def driver(request, settings, worker_id):
     options.system_port = port
     options.new_command_timeout = 120
     options.no_reset = False
+    logger.info("Start test {} on {} (systemPort {})", request.node.name, udid, port)
     drv = webdriver.Remote(settings.appium_url, options=options)
     yield drv
     failed = getattr(request.node, "rep_call", None) is not None and request.node.rep_call.failed
+    logger.log("ERROR" if failed else "INFO", "Test {} {}", request.node.name,
+               "FAILED" if failed else "finished")
     if failed:
         allure.attach(drv.get_screenshot_as_png(), name="screenshot_on_failure",
                       attachment_type=allure.attachment_type.PNG)

@@ -5,3 +5,4 @@ allure-report/
 *.apk
 .venv/
 .idea/
+logs/
