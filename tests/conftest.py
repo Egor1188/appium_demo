@@ -1,0 +1,33 @@
+import allure
+import pytest
+
+from config.settings import load_settings
+from core.devices import device_for_worker, system_port_for_worker
+from core.driver_factory import create_driver
+
+
+@pytest.fixture(scope="session")
+def settings():
+    return load_settings()
+
+
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    """Keep the test result on the item so fixtures can see if the test failed."""
+    outcome = yield
+    rep = outcome.get_result()
+    setattr(item, f"rep_{rep.when}", rep)
+
+
+@pytest.fixture
+def driver(request, settings, worker_id):
+    """One driver per test. Each xdist worker gets its own device and systemPort."""
+    udid = device_for_worker(settings.devices, worker_id)
+    port = system_port_for_worker(settings.base_system_port, worker_id)
+    drv = create_driver(settings, udid, port)
+    yield drv
+    failed = getattr(request.node, "rep_call", None) is not None and request.node.rep_call.failed
+    if failed:
+        allure.attach(drv.get_screenshot_as_png(), name="screenshot_on_failure",
+                      attachment_type=allure.attachment_type.PNG)
+    drv.quit()

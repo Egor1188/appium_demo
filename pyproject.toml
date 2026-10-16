@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "appium-demo"
+version = "0.1.0"
+description = "Small Appium + pytest framework demo (Android, Page Object, parallel runs)"
+authors = ["Heorhii Mishcheriakov <egor1188@gmail.com>"]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.10,<4.0"
+Appium-Python-Client = ">=4"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8"
+pytest-xdist = ">=3"
+allure-pytest = ">=2.13"
+
+[build-system]
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"

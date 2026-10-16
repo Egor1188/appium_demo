@@ -1,0 +1,13 @@
+# The unit job runs without a device. UI tests need a runner with an Android emulator
+# (see README), so they are not part of this minimal pipeline.
+stages: [test]
+
+unit:
+  stage: test
+  image: python:3.12
+  script:
+    - pip install -r requirements.txt
+    - pytest -m "not device" -v --alluredir=allure-results
+  artifacts:
+    when: always
+    paths: [allure-results]
