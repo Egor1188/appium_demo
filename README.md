@@ -34,7 +34,7 @@ apps/                   put ApiDemos-debug.apk here (see apps/README.md)
   console and to `logs/test_<worker>.log`.
 
 ## Requirements
-Python 3.10+, JDK 17, Android SDK with an emulator (Android Studio), Node.js, Appium 2.
+Python 3.14+, JDK 17, Android SDK with an emulator (Android Studio), Node.js, Appium 2.
 
 ## Setup
 1. Install JDK 17, Android Studio (SDK + emulator), Node.js. Set `ANDROID_HOME`.
